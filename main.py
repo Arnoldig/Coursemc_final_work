@@ -25,11 +25,11 @@
 #         - страховка: вводим новый пароль 2 раза (нет в ТЗ)
 #   3) сообщаем об успешной регистрации или неудаче
 
-#   В) Модуль Авторизация:
+# + В) Модуль Авторизация:
 # +  1) запрашиваем логин и пароль
-#    2) проверяем наличие в файле введённого логина и пароля
-#       - строчные и заглавные буквы должны отличаться
-#    3) сообщаем об успешной авторизации или неудаче
+# +  2) проверяем наличие в файле введённого логина и пароля
+# +     - строчные и заглавные буквы должны отличаться
+# +  3) сообщаем об успешной авторизации или неудаче
 
 def main():
     while True:
@@ -44,7 +44,7 @@ def main():
 def get_authorization():
     print(f'Вызвана функция 1: авторизация')
     while True:
-        if not 'user_login' in locals():
+        if 'user_login' not in locals():
             user_login = input('Ваш логин пожалуйста: ')
         if user_login == '':
             user_login = input('Попробуйте ещё раз: ')
@@ -59,17 +59,27 @@ def get_authorization():
         else:
             break
 
-    print('Пользователь ввёл логин и пароль.')
-
     try:
         with open('file_with_login_pass.txt') as file:
             body_file = file.readlines()
     except:
-        return print('Файл с данными не найден. Авторизация не выполнена.')
+        print('Файл с данными не найден. Авторизация не выполнена.')
+        return -1
 
     for l in body_file:
-        if user_login in l and user_paswd in l:
-            return print()
+        if user_login == l.split()[0] and user_paswd in l.split()[1]:
+            print('Авторизация выполнена успешно!')
+            return 1
+
+    else:
+        print('Логин или пароль не найдены или указаны неверно.\n')
+        repeat = input('Напишите 1, если хотите попробовать ввести логин и пароль ещё раз.')
+        try:
+            int(repeat) == 1
+            user_login = user_paswd = ''
+            get_authorization()
+        except:
+            return 0
 
 
 def get_registration():
