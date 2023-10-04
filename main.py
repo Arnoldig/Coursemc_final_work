@@ -42,7 +42,7 @@ def main():
 
 
 def get_authorization():
-    print(f'Вызвана функция 1: авторизация')
+    print('Вызвана функция 1: авторизация')
     while True:
         if 'user_login' not in locals():
             user_login = input('Ваш логин пожалуйста: ')
@@ -75,15 +75,15 @@ def get_authorization():
         print('Логин или пароль не найдены или указаны неверно.\n')
         repeat = input('Напишите 1, если хотите попробовать ввести логин и пароль ещё раз.')
         try:
-            int(repeat) == 1
-            user_login = user_paswd = ''
-            get_authorization()
+            if int(repeat) == 1:
+                user_login = user_paswd = ''
+                get_authorization()
         except:
             return 0
 
 
 def get_registration():
-    print(f'Вызвана функция 2: регистрация')
+    print('Вызвана функция 2: регистрация')
     pass
 
 
