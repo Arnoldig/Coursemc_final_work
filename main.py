@@ -118,8 +118,9 @@ def creat_login():
                 except (TypeError, ValueError):
                     return 0
 
-def creat_passwd():
 
+def creat_passwd():
+    pass
 
 def get_register():
     print('Вызвана функция 2: регистрация\n')
