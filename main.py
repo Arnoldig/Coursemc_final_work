@@ -62,7 +62,10 @@ def get_enter():
         with open('file_with_login_pass.txt') as file:
             body_file = file.readlines()
     except FileNotFoundError:
-        print('Файл с данными не найден. Авторизация не выполнена.')
+        print('Ошибка авторизации: файл с данными не найден.')
+        return -1
+    except PermissionError:
+        print('Ошибка авторизации: недостаточно прав для чтения файла.')
         return -1
 
     for l in body_file:
@@ -80,17 +83,40 @@ def get_enter():
 
 
 def get_login_verification(login: str):
-    check_len, chek_num, chek_alf = 0, 0, 0
-    if 3 <= len(login) <= 20:
-        check_len += 1
-        for i in login:
-            if check_len + chek_num + chek_alf >= 2:
-                return 1
-            elif i.isnumeric() and chek_num == 0:
-                chek_num += 1
-            elif i.isalpha() and chek_alf == 0:
-                chek_alf += 1
-    return 0
+    try:
+        with open('file_with_login_pass.txt') as file:
+            body = file.read()
+        if login + ' ' in body:
+            print(f'Логин {login} уже занят.')
+            return 0
+    except FileNotFoundError:
+        print('Ошибка верификации: файл с данными не найден.')
+        return 0
+    except PermissionError:
+        print('Ошибка верификации: недостаточно прав для чтения файла.')
+        return 0
+
+    chek_num, chek_alf = 0, 0
+    for i in login:
+        if i.isnumeric():
+            chek_num += 1
+        elif i.isalpha():
+            chek_alf += 1
+
+    err_detls = ''
+    if len(login) <= 3:
+        err_detls = '- cлишком короткий логин\n'
+    elif len(login) >= 20:
+        err_detls = '- cлишком длинный логин\n'
+
+    if chek_num == 0 and chek_alf == 0:
+        err_detls += '- логин не содержит ни одну букву или цифру.\n'
+
+    if err_detls != '':
+        print(f'Логин "{login}" не соответствует критериям:\n{err_detls}')
+        return 0
+    else:
+        return 1
 
 
 def creat_login():
@@ -110,8 +136,7 @@ def creat_login():
                 print('Прекрасный логин!')
                 return 1
             else:
-                repeat = input('Логин не соответствует нужным критериям.\n'
-                               'Нажмите 1, чтобы попробовать ещё раз: ')
+                repeat = input('Нажмите 1, чтобы попробовать ещё раз: ')
                 try:
                     if int(repeat) != 1:
                         break
@@ -121,6 +146,7 @@ def creat_login():
 
 def creat_passwd():
     pass
+
 
 def get_register():
     print('Вызвана функция 2: регистрация\n')
