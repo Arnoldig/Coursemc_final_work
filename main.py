@@ -38,14 +38,14 @@ def main():
     while True:
         answer = input('Введите 1 для авторизации, и 2 для регистрации: ')
         if answer == '1':
-            get_enter()
+            get_authorization()
             break
         elif answer == '2':
-            get_register()
+            get_registration()
             break
 
 
-def get_enter():
+def get_authorization():
     print('Вызвана функция 1: авторизация\n')
     while True:
         if 'user_login' not in locals():
@@ -80,7 +80,7 @@ def get_enter():
     print('Логин или пароль не найдены или указаны неверно.\n')
     repeat = input('Введите 1, если хотите попробовать ещё раз: ')
     if repeat == '1':
-        get_enter()
+        get_authorization()
     else:
         return 0
 
@@ -144,10 +144,10 @@ def creat_login():
             if get_login_verification(new_login) == 1:
                 print('Прекрасный логин!\n')
                 return new_login
-            else:
-                repeat = input('Введите 1, чтобы попробовать ещё раз: ')
-                if repeat != '1':
-                    return 0
+
+            repeat = input('Введите 1, чтобы попробовать ещё раз: ')
+            if repeat != '1':
+                return 0
 
 
 def get_new_passwd_verification(passwd: str):
@@ -200,7 +200,7 @@ def creat_passwd():
                     return 0
 
 
-def get_register():
+def get_registration():
     print('Вызвана функция 2: регистрация\n')
 
     new_login = creat_login()
@@ -212,23 +212,23 @@ def get_register():
     if new_paswd == 0:
         print('Регистрация отменена пользователем: этап создание пароля.')
         return 0
-    else:
-        while True:
-            test_passwd = input(
-                'Введите пароль ещё раз, чтобы запомнить его: ')
-            if new_paswd == test_passwd:
-                print('Всё правильно, сохряняю ваши данные ...\n')
-                break
-            else:
-                repeat = input('Введите 1, чтобы попробовать ещё раз: ')
-                if repeat != '1':
-                    print('Регистрация отменена пользователем: разные пароли')
-                    return 0
+
+    while True:
+        test_passwd = input(
+            'Введите пароль ещё раз, чтобы запомнить его: ')
+        if new_paswd == test_passwd:
+            print('Всё правильно, сохряняю ваши данные ...\n')
+            break
+        else:
+            repeat = input('Введите 1, чтобы попробовать ещё раз: ')
+            if repeat != '1':
+                print('Регистрация отменена пользователем: разные пароли')
+                return 0
 
     try:
         with open('file_with_login_pass.txt', 'a', encoding='utf-8') as file:
-            for_write_file = new_login + ' ' + new_paswd + '\n'
-            file.write(for_write_file)
+
+            file.write(f'{new_login} {new_paswd}')
         print('Регистрация выполнена успешно!')
         return 1
     except PermissionError:
