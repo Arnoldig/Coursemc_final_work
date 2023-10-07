@@ -242,7 +242,7 @@ def passwd_compare(passwd: str) -> int:
         if passwd == test_passwd:
             return 1
 
-        repeat = input('REQUEST_REENTER_DATA')
+        repeat = input(REQUEST_REENTER_DATA)
         if repeat != '1':
             return 0
 
@@ -266,6 +266,7 @@ def get_registration() -> int:
 
     if not passwd_compare(new_paswd):
         print('Регистрация отменена пользователем: разные пароли')
+        return 0
 
     if not processing_file(DATA_FILE,
                            'a',
