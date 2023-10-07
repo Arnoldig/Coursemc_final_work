@@ -122,7 +122,7 @@ def error_details(chek_name: str, chek_data: str,
     return 1
 
 
-def login_verificat(login: str, creat_log: bool = False) -> int:
+def verificat_login(login: str, creat_log: bool = False) -> int:
     """
     Функция проверяет логин на соответствие критериям при разных ситуациях:
     - при регистрации - проверка на уникальность, длину и допустимые символы
@@ -146,7 +146,7 @@ def login_verificat(login: str, creat_log: bool = False) -> int:
     return 1
 
 
-def passwd_verificat(passwd: str) -> int:
+def verificat_pass(passwd: str) -> int:
     """
     Функция верифицирует пароль вводимый пользователем по критериям:
         - длина пароля, содержание букв, цифр и недопустимых символов.
@@ -170,8 +170,8 @@ def get_authorization() -> int:
 
     login = get_user_data('Введите ваш логин')
     passwd = get_user_data('Введите ваш пароль')
-    verif_login = login_verificat(login)
-    verif_passwd = passwd_verificat(passwd)
+    verif_login = verificat_login(login)
+    verif_passwd = verificat_pass(passwd)
     if verif_login == 0 or verif_passwd == 0:
         repeat = input(REQUEST_REENTER_DATA)
         if repeat == '1':
@@ -201,7 +201,7 @@ def creat_login() -> Union[str, int]:
             '  2) использованы только буквы и/или цифры\n'
             'Введите новый логин здесь: ')
 
-        if login_verificat(new_login, True) == 1:
+        if verificat_login(new_login, True) == 1:
             print('Прекрасный логин!\n')
             return new_login
 
@@ -222,7 +222,7 @@ def creat_passwd() -> Union[str, int]:
             '  2) состоит из букв и хотя бы одной цифры\n'
             'Введите новый пароль здесь: ')
 
-        if passwd_verificat(new_passwd) == 1:
+        if verificat_pass(new_passwd) == 1:
             print('Прекрасный пароль!\n')
             return new_passwd
 
