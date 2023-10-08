@@ -110,7 +110,9 @@ def error_details(chek_name: str, chek_data: str,
         err_detls = f'- cлишком длинный {chek_name}\n'
 
     if chek_num == 0 and chek_alf == 0:
-        err_detls += f'- {chek_name} не содержит ни одну букву или цифру.\n'
+        err_detls += f'- {chek_name} не содержит букв или цифр.\n'
+    if chek_name == "пароль" and chek_num == 0:
+        err_detls += f'- {chek_name} должен содержать хотя бы 1 цифру.\n'
     if chek_data_len != chek_num + chek_alf:
         err_detls += f'- {chek_name} содержит недопустимые символы:\n'
 
@@ -132,16 +134,14 @@ def chek_login(login_name: str, creat_log: bool = False) -> bool:
     """
     if creat_log:
         body_lines = processing_file(DATA_FILE)
-        if body_lines == 0:
+        if body_lines == False:
             return False
         for line in body_lines:
             if login_name == line.split()[0]:
                 print(f'Логин {login_name} уже занят.')
                 return False
 
-    if error_details('логин', login_name, 3, 20):
-        return True
-    return False
+    return error_details('логин', login_name, 3, 20)
 
 
 def chek_pass(passwd: str) -> bool:
@@ -151,9 +151,7 @@ def chek_pass(passwd: str) -> bool:
     :param passwd: пароль который ввёл пользователь
     :return: True - верификация прошла успешно, False - есть ошибки.
     """
-    if error_details('пароль', passwd, 4, 32):
-        return True
-    return False
+    return error_details('пароль', passwd, 4, 32)
 
 
 def login() -> bool:
@@ -166,14 +164,14 @@ def login() -> bool:
     passwd = user_data('Введите ваш пароль')
     verif_login = chek_login(login_user)
     verif_passwd = chek_pass(passwd)
-    if verif_login == 0 or verif_passwd == 0:
+    if verif_login == False or verif_passwd == False:
         repeat = input(REQUEST_REENTER_DATA)
         if repeat == '1':
             login()
         return False
 
     body_lines = processing_file(DATA_FILE)
-    if body_lines != 0:
+    if body_lines != False:
         for line in body_lines:
             if login_user == line.split()[0] and passwd == line.split()[1]:
                 print('Авторизация успешно выполнена!')
@@ -195,7 +193,7 @@ def creat_login() -> Union[str, bool]:
             '  2) использованы только буквы и/или цифры\n'
             'Введите новый логин здесь: ')
 
-        if chek_login(new_login, True) == 1:
+        if chek_login(new_login, True) == True:
             print('Прекрасный логин!\n')
             return new_login
 
@@ -216,7 +214,7 @@ def creat_passwd() -> Union[str, bool]:
             '  2) состоит из букв и хотя бы одной цифры\n'
             'Введите новый пароль здесь: ')
 
-        if chek_pass(new_passwd) == 1:
+        if chek_pass(new_passwd) == True:
             print('Прекрасный пароль!\n')
             return new_passwd
 
@@ -249,12 +247,12 @@ def register() -> bool:
     print('Вызвана функция 2: регистрация\n')
 
     new_login = creat_login()
-    if new_login == 0:
+    if new_login == False:
         print('Регистрация отменена пользователем: этап создание логина.')
         return False
 
     new_paswd = creat_passwd()
-    if new_paswd == 0:
+    if new_paswd == False:
         print('Регистрация отменена пользователем: этап создание пароля.')
         return False
 
